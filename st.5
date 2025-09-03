@@ -1,0 +1,21 @@
+# Step 5: Choropleth map of DDI
+fig_map = px.choropleth(
+    df_latest,
+    locations="iso3",
+    color="DDI",
+    hover_name="country",
+    color_continuous_scale="Viridis",
+    title="🌍 Global Digital Divide Index"
+)
+fig_map.show()
+
+# Top 15 countries
+fig_top = px.bar(
+    df_latest.sort_values("DDI", ascending=False).head(15),
+    x="country",
+    y="DDI",
+    title="🏆 Top 15 Countries by DDI",
+    text="DDI"
+)
+fig_top.update_traces(texttemplate='%{text:.2f}', textposition='outside')
+fig_top.show()
