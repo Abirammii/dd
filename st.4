@@ -1,0 +1,20 @@
+# Step 4: Clean and prepare the data
+latest_year = all_data.groupby("country")["year"].max().reset_index()
+df_latest = pd.merge(all_data, latest_year, on=["country", "year"], how="inner")
+
+# Drop rows with too many missing values
+df_latest = df_latest.dropna(thresh=4)
+
+# Fill missing values with median
+df_latest.fillna(df_latest.median(numeric_only=True), inplace=True)
+
+# Normalize indicators
+scaler = MinMaxScaler()
+numeric_cols = list(indicators.keys())
+df_latest[numeric_cols] = scaler.fit_transform(df_latest[numeric_cols])
+
+# Compute Digital Divide Index (DDI)
+df_latest["DDI"] = df_latest[numeric_cols].mean(axis=1)
+
+print("✅ Data prepared. Sample:")
+df_latest.head()
